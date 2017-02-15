@@ -1,0 +1,30 @@
+- name: Create a cinder volume
+  shell: cinder --os-username {{os_username}} --os-password {{os_password}} --os-project-name {{os_project_name}} --os-user-domain-name {{os_user_domain_name}} --os-project-domain-name {{os_project_domain_name}} --os-auth-url {{os_auth_url}} create --name {{volume_name}} {{volume_size_gb}}|grep -w id|awk '{print $4}'
+  register: volume_id
+  ignore_errors: True
+
+- name: Attach cinder volume to instance
+  shell: cinder --os-username {{os_username}} --os-password {{os_password}} --os-project-name {{os_project_name}} --os-user-domain-name {{os_user_domain_name}} --os-project-domain-name {{os_project_domain_name}} --os-auth-url {{os_auth_url}} local-attach {{ volume_id.stdout }}
+
+
+- name: Find the device
+  shell: iscsiadm -m session -P 3 |grep -A 50 {{ volume_id.stdout }}|grep "Attached scsi disk"|awk '{print $4}'
+  register: device_name
+  ignore_errors: True
+
+- name: Partition device
+  shell: echo "n\np\n1\n\n\nw\n" |fdisk /dev/{{ device_name.stdout }}
+
+- name: Create a filesystem
+  shell: mkfs.ext4 /dev/{{ device_name.stdout }}1
+
+- name: Create mountpoint directory
+  file:
+   path='{{mount_volume_path}}'
+   state=directory
+
+
+- name: Mount volume to a directory
+  shell: mount -t ext4 /dev/{{ device_name.stdout }}1 {{mount_volume_path}}
+
+- include: rc_local.yml

@@ -1,0 +1,5 @@
+---
+# controller node ip
+
+controller_ip: 192.168.1.11
+openstack_repository: ppa:ubuntu-cloud-archive/mitaka-staging

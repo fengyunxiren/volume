@@ -1,0 +1,13 @@
+---
+#defaults paramaters
+
+os_username: admin
+os_password: airation
+os_project_name: admin
+os_user_domain_name: Default
+os_project_domain_name: Default
+os_auth_url: http://controller:35357/v3
+volume_name: hpc_volume
+volume_size_gb: 1
+
+mount_volume_path: /home/ubuntu/data

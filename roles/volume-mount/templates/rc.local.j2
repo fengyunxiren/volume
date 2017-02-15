@@ -1,0 +1,18 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+if [ -d {{mount_volume_path}} ] && [ -b /dev/{{device_name.stdout}}1 ];then
+	mount -t ext4 /dev/{{device_name.stdout}}1 {{mount_volume_path}}
+else
+	echo "Cinder volume is not mount!"
+fi
+exit 0

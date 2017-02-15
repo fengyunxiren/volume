@@ -1,0 +1,33 @@
+---
+# add a cinder volume to cluster
+- name: Add Openstack repository
+  apt_repository:
+   repo='{{openstack_repository}}'
+   mode=0444
+   update_cache=yes
+  tags:
+   - cinder-client
+
+- name: Install python-cinderclient
+  apt: name='{{item}}'
+  with_items:
+   - open-iscsi
+   - udev
+   - python-dev
+   - python-pip
+   - python-cinderclient
+   - libffi-dev
+  tags:
+   - cinder-client
+
+- name: Install python-brick-cinderclient-ext
+  pip: name='{{item}}'
+  with_items:
+   - python-brick-cinderclient-ext
+   - rfc3986
+   - cffi
+   - greenlet
+  tags:
+   - cinder-client
+
+- include: hosts.yml

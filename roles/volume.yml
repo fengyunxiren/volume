@@ -1,0 +1,6 @@
+---
+- name: Add cinder volume to ironic instance
+  hosts: hpc
+  roles:
+   - cinder-client
+   - volume-mount

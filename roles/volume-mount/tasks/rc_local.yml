@@ -1,0 +1,8 @@
+---
+- name: Mount volume when instance is boot
+  template:
+   dest=/etc/rc.local
+   src=rc.local.j2
+   owner=root
+   group=root
+   mode=0755
